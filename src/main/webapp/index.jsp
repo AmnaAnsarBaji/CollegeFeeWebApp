@@ -75,7 +75,7 @@ background:#1f3fa3;
 
 <a href="DisplayFeePaymentsServlet">View Records</a>
 
-<a href="feepaymentupdate.jsp">Update Payment</a>
+<a href="UpdateListServlet">Update</a>
 
 <a href="feepaymentdelete.jsp">Delete Payment</a>
 

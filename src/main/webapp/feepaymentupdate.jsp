@@ -1,103 +1,214 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ page import="java.sql.*" %>
+
+<%
+String id = request.getParameter("id");
+
+String paymentID="";
+String studentID="";
+String studentName="";
+String paymentDate="";
+String amount="";
+String status="Paid";
+
+try{
+
+Class.forName("com.mysql.cj.jdbc.Driver");
+
+Connection con = DriverManager.getConnection(
+"jdbc:mysql://localhost:3306/collegefee",
+"root",
+"AmNa@@2606"
+);
+
+PreparedStatement ps =
+con.prepareStatement(
+"select * from feepayments where PaymentID=?"
+);
+
+ps.setInt(1,Integer.parseInt(id));
+
+ResultSet rs = ps.executeQuery();
+
+if(rs.next()){
+
+paymentID = rs.getString("PaymentID");
+studentID = rs.getString("StudentID");
+studentName = rs.getString("StudentName");
+paymentDate = rs.getString("PaymentDate");
+amount = rs.getString("Amount");
+status = rs.getString("Status");
+
+}
+
+con.close();
+
+}catch(Exception e){
+
+out.println(e);
+
+}
+%>
+
 <!DOCTYPE html>
+
 <html>
+
 <head>
+
 <meta charset="UTF-8">
+
 <title>Update Payment</title>
 
 <style>
+
 body{
 margin:0;
+padding:0;
 font-family:Arial,sans-serif;
-background:linear-gradient(135deg,#0b1d51,#27408b);
-height:100vh;
+background:linear-gradient(135deg,#102b72,#1e3c8f);
 display:flex;
 justify-content:center;
 align-items:center;
+height:100vh;
 }
 
-.container{
+.box{
 background:white;
+width:520px;
 padding:40px;
-width:500px;
 border-radius:25px;
-box-shadow:0 10px 25px rgba(0,0,0,0.3);
 text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,0.3);
 }
 
 h1{
-color:#1f3fa3;
-margin-bottom:25px;
+color:#102b72;
+margin-bottom:30px;
+font-size:42px;
 }
 
 input,select{
-width:90%;
-padding:12px;
-margin:10px;
-font-size:16px;
-border:1px solid #ccc;
+width:100%;
+padding:15px;
+margin:12px 0;
 border-radius:10px;
+border:1px solid #ccc;
+font-size:16px;
+box-sizing:border-box;
+}
+
+.idbox{
+background:#e5e5e5;
+font-weight:bold;
+color:#444;
 }
 
 button{
 background:#2952cc;
 color:white;
-padding:14px 30px;
+padding:15px 30px;
 border:none;
 border-radius:12px;
 font-size:18px;
 cursor:pointer;
 font-weight:bold;
+transition:0.3s;
 }
 
 button:hover{
 background:#1f3fa3;
+transform:scale(1.03);
 }
 
 a{
-display:block;
+display:inline-block;
 margin-top:20px;
 text-decoration:none;
 font-weight:bold;
+font-size:18px;
 color:#1f3fa3;
 }
+
 </style>
 
 </head>
 
 <body>
 
-<div class="container">
+<div class="box">
 
 <h1>Update Payment</h1>
 
 <form action="UpdateFeePaymentServlet" method="post">
 
-<input type="number" name="paymentID" placeholder="Payment ID" required>
+<input
+type="hidden"
+name="paymentID"
+value="<%=paymentID%>">
 
-<input type="number" name="studentID" placeholder="Student ID" required>
+<input
+type="text"
+value="Payment ID : <%=paymentID%>"
+class="idbox"
+readonly>
 
-<input type="text" name="studentName" placeholder="Student Name" required>
+<input
+type="number"
+name="studentID"
+value="<%=studentID%>"
+placeholder="Student ID"
+required>
 
-<input type="date" name="paymentDate" required>
+<input
+type="text"
+name="studentName"
+value="<%=studentName%>"
+placeholder="Student Name"
+required>
 
-<input type="number" step="0.01" min="1" name="amount" placeholder="Amount" required>
+<input
+type="date"
+name="paymentDate"
+value="<%=paymentDate%>"
+required>
+
+<input
+type="number"
+step="0.01"
+min="1"
+name="amount"
+value="<%=amount%>"
+placeholder="Amount"
+required>
 
 <select name="status">
-<option>Paid</option>
-<option>Overdue</option>
-<option>Unpaid</option>
+
+<option value="Paid"
+<%=status.equals("Paid")?"selected":""%>>
+Paid
+</option>
+
+<option value="Overdue"
+<%=status.equals("Overdue")?"selected":""%>>
+Overdue
+</option>
+
 </select>
 
 <br><br>
 
-<button type="submit">Update Payment</button>
+<button type="submit">
+Update Payment
+</button>
 
 </form>
 
-<a href="index.jsp">Back</a>
+<a href="UpdateListServlet">
+Back
+</a>
 
 </div>
 
 </body>
+
 </html>

@@ -28,7 +28,7 @@ public class ReportServlet extends HttpServlet {
 					"root",
 					"AmNa@@2606");
 
-			// ---------------- OVERDUE STUDENTS ----------------
+			// ================= OVERDUE REPORT =================
 			if ("overdue".equals(type)) {
 
 				PreparedStatement ps = con.prepareStatement(
@@ -36,28 +36,115 @@ public class ReportServlet extends HttpServlet {
 
 				ResultSet rs = ps.executeQuery();
 
-				out.println("<html><body style='margin:0;font-family:Arial;background:#102b72;color:white;padding:40px;'>");
-				out.println("<h1>Overdue Students</h1>");
+				out.println("<html>");
+				out.println("<head>");
+				out.println("<title>Overdue Report</title>");
 
-				out.println("<table border='1' cellpadding='10' cellspacing='0' style='background:white;color:black;border-collapse:collapse;width:100%;'>");
-				out.println("<tr><th>ID</th><th>Name</th><th>Date</th><th>Amount</th><th>Status</th></tr>");
+				out.println("<style>");
+				out.println("body{margin:0;font-family:Arial;background:#102b72;padding:40px;color:white;}");
+				out.println("h1{text-align:center;margin-bottom:30px;}");
+				out.println("table{width:100%;border-collapse:collapse;background:white;color:black;border-radius:10px;overflow:hidden;}");
+				out.println("th{background:#d62828;color:white;padding:15px;}");
+				out.println("td{padding:12px;text-align:center;border-bottom:1px solid #ccc;}");
+				out.println("tr:hover{background:#f2f2f2;}");
+				out.println(".btn{display:inline-block;margin-top:25px;background:#2952cc;color:white;padding:12px 25px;text-decoration:none;border-radius:10px;font-weight:bold;}");
+				out.println("</style>");
 
-				while(rs.next()){
+				out.println("</head>");
+				out.println("<body>");
+
+				out.println("<h1>Overdue Students Report</h1>");
+
+				out.println("<table>");
+
+				out.println("<tr>");
+				out.println("<th>ID</th>");
+				out.println("<th>Name</th>");
+				out.println("<th>Date</th>");
+				out.println("<th>Amount</th>");
+				out.println("<th>Status</th>");
+				out.println("</tr>");
+
+				while(rs.next()) {
+
 					out.println("<tr>");
 					out.println("<td>"+rs.getInt("PaymentID")+"</td>");
 					out.println("<td>"+rs.getString("StudentName")+"</td>");
 					out.println("<td>"+rs.getString("PaymentDate")+"</td>");
-					out.println("<td>"+rs.getDouble("Amount")+"</td>");
+					out.println("<td>Rs. "+rs.getDouble("Amount")+"</td>");
 					out.println("<td>"+rs.getString("Status")+"</td>");
 					out.println("</tr>");
 				}
 
-				out.println("</table><br>");
-				out.println("<a href='reports.jsp' style='color:white;'>Back</a>");
-				out.println("</body></html>");
+				out.println("</table>");
+
+				out.println("<center>");
+				out.println("<a class='btn' href='reports.jsp'>Back</a>");
+				out.println("</center>");
+
+				out.println("</body>");
+				out.println("</html>");
 			}
 
-			// ---------------- DATE RANGE COLLECTION ----------------
+			// ================= PAID REPORT =================
+			else if ("paid".equals(type)) {
+
+				PreparedStatement ps = con.prepareStatement(
+						"SELECT * FROM feepayments WHERE Status='Paid'");
+
+				ResultSet rs = ps.executeQuery();
+
+				out.println("<html>");
+				out.println("<head>");
+				out.println("<title>Paid Students Report</title>");
+
+				out.println("<style>");
+				out.println("body{margin:0;font-family:Arial;background:#102b72;padding:40px;color:white;}");
+				out.println("h1{text-align:center;margin-bottom:30px;}");
+				out.println("table{width:100%;border-collapse:collapse;background:white;color:black;border-radius:10px;overflow:hidden;}");
+				out.println("th{background:#28a745;color:white;padding:15px;}");
+				out.println("td{padding:12px;text-align:center;border-bottom:1px solid #ccc;}");
+				out.println("tr:hover{background:#f2f2f2;}");
+				out.println(".btn{display:inline-block;margin-top:25px;background:#2952cc;color:white;padding:12px 25px;text-decoration:none;border-radius:10px;font-weight:bold;}");
+				out.println("</style>");
+
+				out.println("</head>");
+				out.println("<body>");
+
+				out.println("<h1>Paid Students Report</h1>");
+
+				out.println("<table>");
+
+				out.println("<tr>");
+				out.println("<th>ID</th>");
+				out.println("<th>Name</th>");
+				out.println("<th>Date</th>");
+				out.println("<th>Amount</th>");
+				out.println("<th>Status</th>");
+				out.println("</tr>");
+
+				while(rs.next()) {
+
+					out.println("<tr>");
+					out.println("<td>"+rs.getInt("PaymentID")+"</td>");
+					out.println("<td>"+rs.getString("StudentName")+"</td>");
+					out.println("<td>"+rs.getString("PaymentDate")+"</td>");
+					out.println("<td>Rs. "+rs.getDouble("Amount")+"</td>");
+					out.println("<td>"+rs.getString("Status")+"</td>");
+					out.println("</tr>");
+				}
+
+				out.println("</table>");
+
+				out.println("<center>");
+				out.println("<a class='btn' href='reports.jsp'>Back</a>");
+				out.println("</center>");
+
+				out.println("</body>");
+				out.println("</html>");
+			}
+
+			// ================= DATE RANGE REPORT =================
 			else if ("range".equals(type)) {
 
 				String fromDate = request.getParameter("fromDate");
@@ -73,60 +160,97 @@ public class ReportServlet extends HttpServlet {
 
 				double total = 0;
 
-				if(rs.next()){
+				if(rs.next()) {
 					total = rs.getDouble(1);
 				}
 
-				out.println("<html><body style='margin:0;font-family:Arial;background:#102b72;color:white;text-align:center;padding-top:150px;'>");
-				out.println("<div style='background:white;color:black;width:500px;margin:auto;padding:40px;border-radius:20px;'>");
-				out.println("<h1>Total Collection</h1>");
-				out.println("<h2> &#8377 " + total + "</h2><br>");
-				out.println("<a href='reports.jsp'>Back</a>");
-				out.println("</div></body></html>");
-			}
+				out.println("<html>");
+				out.println("<head>");
+				out.println("<title>Collection Report</title>");
 
-			// ---------------- UNPAID STUDENTS ----------------
-			else if ("unpaid".equals(type)) {
+				out.println("<style>");
 
-				String fromDate = request.getParameter("fromDate");
-				String toDate = request.getParameter("toDate");
+				out.println("body{");
+				out.println("margin:0;");
+				out.println("font-family:Arial;");
+				out.println("background:#102b72;");
+				out.println("display:flex;");
+				out.println("justify-content:center;");
+				out.println("align-items:center;");
+				out.println("height:100vh;");
+				out.println("}");
 
-				PreparedStatement ps = con.prepareStatement(
-						"SELECT * FROM feepayments WHERE Status <> 'Paid' AND PaymentDate BETWEEN ? AND ?");
+				out.println(".box{");
+				out.println("background:#f2f2f2;");
+				out.println("width:500px;");
+				out.println("padding:50px;");
+				out.println("border-radius:20px;");
+				out.println("text-align:center;");
+				out.println("box-shadow:0 0 20px rgba(0,0,0,0.3);");
+				out.println("}");
 
-				ps.setString(1, fromDate);
-				ps.setString(2, toDate);
+				out.println("h1{");
+				out.println("color:#102b72;");
+				out.println("margin-bottom:25px;");
+				out.println("font-size:50px;");
+				out.println("}");
 
-				ResultSet rs = ps.executeQuery();
+				out.println("h2{");
+				out.println("font-size:28px;");
+				out.println("margin-bottom:15px;");
+				out.println("}");
 
-				out.println("<html><body style='margin:0;font-family:Arial;background:#102b72;color:white;padding:40px;'>");
-				out.println("<h1>Unpaid Students</h1>");
+				out.println(".amount{");
+				out.println("font-size:55px;");
+				out.println("font-weight:bold;");
+				out.println("color:green;");
+				out.println("margin:25px 0;");
+				out.println("}");
 
-				out.println("<table border='1' cellpadding='10' cellspacing='0' style='background:white;color:black;border-collapse:collapse;width:100%;'>");
-				out.println("<tr><th>ID</th><th>Name</th><th>Date</th><th>Amount</th><th>Status</th></tr>");
+				out.println(".date{");
+				out.println("font-size:22px;");
+				out.println("margin:15px 0;");
+				out.println("}");
 
-				boolean found = false;
+				out.println(".btn{");
+				out.println("display:inline-block;");
+				out.println("margin-top:25px;");
+				out.println("padding:14px 30px;");
+				out.println("background:#2d56d3;");
+				out.println("color:white;");
+				out.println("text-decoration:none;");
+				out.println("border-radius:12px;");
+				out.println("font-size:20px;");
+				out.println("font-weight:bold;");
+				out.println("}");
 
-				while(rs.next()){
-					found = true;
+				out.println("</style>");
+				out.println("</head>");
 
-					out.println("<tr>");
-					out.println("<td>"+rs.getInt("PaymentID")+"</td>");
-					out.println("<td>"+rs.getString("StudentName")+"</td>");
-					out.println("<td>"+rs.getString("PaymentDate")+"</td>");
-					out.println("<td>"+rs.getDouble("Amount")+"</td>");
-					out.println("<td>"+rs.getString("Status")+"</td>");
-					out.println("</tr>");
-				}
+				out.println("<body>");
 
-				out.println("</table><br>");
+				out.println("<div class='box'>");
 
-				if(!found){
-					out.println("<h2>No unpaid students found.</h2>");
-				}
+				out.println("<h1>Collection Report</h1>");
 
-				out.println("<a href='reports.jsp' style='color:white;'>Back</a>");
-				out.println("</body></html>");
+				out.println("<h2>Total Collection</h2>");
+
+				out.println("<div class='amount'>Rs. " + total + "</div>");
+
+				out.println("<div class='date'>");
+				out.println("From : <b>" + fromDate + "</b>");
+				out.println("</div>");
+
+				out.println("<div class='date'>");
+				out.println("To : <b>" + toDate + "</b>");
+				out.println("</div>");
+
+				out.println("<a href='reports.jsp' class='btn'>Back</a>");
+
+				out.println("</div>");
+
+				out.println("</body>");
+				out.println("</html>");
 			}
 
 			con.close();

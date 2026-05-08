@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,10 +7,12 @@
 <title>Reports</title>
 
 <style>
+
 body{
 margin:0;
-font-family:Arial,sans-serif;
-background:linear-gradient(135deg,#0b1d51,#27408b);
+padding:0;
+font-family:Arial;
+background:linear-gradient(135deg,#102b72,#2846a3);
 height:100vh;
 display:flex;
 justify-content:center;
@@ -17,43 +20,50 @@ align-items:center;
 }
 
 .container{
-background:white;
-padding:40px;
+background:#f2f2f2;
 width:550px;
+padding:50px;
 border-radius:25px;
 text-align:center;
-box-shadow:0 10px 25px rgba(0,0,0,0.3);
+box-shadow:0 0 25px rgba(0,0,0,0.3);
 }
 
 h1{
-color:#1f3fa3;
-margin-bottom:25px;
-font-size:42px;
+color:#1d3fa6;
+font-size:65px;
+margin-bottom:40px;
 }
 
-a{
+.btn{
 display:block;
-text-decoration:none;
-background:#2952cc;
-color:white;
-padding:15px;
-margin:15px 0;
-border-radius:12px;
+width:100%;
+padding:18px;
+margin:18px 0;
 font-size:22px;
 font-weight:bold;
+border:none;
+border-radius:15px;
+cursor:pointer;
+text-decoration:none;
+background:#3256d3;
+color:white;
+transition:0.3s;
+box-sizing:border-box;
 }
 
-a:hover{
+.btn:hover{
 background:#1f3fa3;
+transform:scale(1.02);
 }
 
 .home{
-background:#28a745;
+background:#2fad43;
 }
 
 .home:hover{
-background:#1d7d33;
+background:#238f36;
 }
+
 </style>
 
 </head>
@@ -64,13 +74,21 @@ background:#1d7d33;
 
 <h1>Reports</h1>
 
-<a href="ReportServlet?type=overdue">Overdue Students</a>
+<a href="ReportServlet?type=overdue" class="btn">
+Overdue Students
+</a>
 
-<a href="report_form.jsp?type=range">Date Range Collection</a>
+<a href="daterange.jsp" class="btn">
+Date Range Collection
+</a>
 
-<a href="report_form.jsp?type=unpaid">Unpaid Students</a>
+<a href="ReportServlet?type=paid" class="btn">
+Paid Students
+</a>
 
-<a href="index.jsp" class="home">Home</a>
+<a href="index.jsp" class="btn home">
+Home
+</a>
 
 </div>
 

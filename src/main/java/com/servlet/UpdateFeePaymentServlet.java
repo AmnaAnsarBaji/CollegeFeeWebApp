@@ -1,47 +1,201 @@
 package com.servlet;
 
 import java.io.IOException;
-import javax.servlet.*;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
-import com.dao.FeePaymentDAO;
-import com.model.FeePayment;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/UpdateFeePaymentServlet")
+
 public class UpdateFeePaymentServlet extends HttpServlet {
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request,
+	HttpServletResponse response)
 
-		int paymentID = Integer.parseInt(request.getParameter("paymentID"));
-		int studentID = Integer.parseInt(request.getParameter("studentID"));
-		String studentName = request.getParameter("studentName");
-		String paymentDate = request.getParameter("paymentDate");
-		double amount = Double.parseDouble(request.getParameter("amount"));
-		String status = request.getParameter("status");
+	throws ServletException, IOException {
 
-		FeePayment f = new FeePayment();
+		response.setContentType("text/html");
 
-		f.setPaymentID(paymentID);
-		f.setStudentID(studentID);
-		f.setStudentName(studentName);
-		f.setPaymentDate(paymentDate);
-		f.setAmount(amount);
-		f.setStatus(status);
+		PrintWriter out = response.getWriter();
 
-		FeePaymentDAO dao = new FeePaymentDAO();
-		dao.updatePayment(f);
+		int paymentID =
+		Integer.parseInt(request.getParameter("paymentID"));
 
-		response.getWriter().println(
-		"<html><body style='margin:0;font-family:Arial;background:#102b72;color:white;text-align:center;padding-top:180px;'>" +
+		int studentID =
+		Integer.parseInt(request.getParameter("studentID"));
 
-		"<div style='background:white;color:black;width:500px;margin:auto;padding:40px;border-radius:20px;'>" +
+		String newName =
+		request.getParameter("studentName");
 
-		"<h1>Payment Updated Successfully</h1><br>" +
+		String paymentDate =
+		request.getParameter("paymentDate");
 
-		"<a href='index.jsp' style='text-decoration:none;background:#2952cc;color:white;padding:14px 30px;border-radius:12px;font-weight:bold;'>Home</a>" +
+		double newAmount =
+		Double.parseDouble(request.getParameter("amount"));
 
-		"</div></body></html>");
+		String status =
+		request.getParameter("status");
+
+		String oldName = "";
+
+		double oldAmount = 0;
+
+		try{
+
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+			Connection con = DriverManager.getConnection(
+
+			"jdbc:mysql://localhost:3306/collegefee",
+
+			"root",
+
+			"AmNa@@2606"
+
+			);
+
+			PreparedStatement oldps =
+			con.prepareStatement(
+
+			"select * from feepayments where PaymentID=?"
+
+			);
+
+			oldps.setInt(1,paymentID);
+
+			ResultSet rs = oldps.executeQuery();
+
+			if(rs.next()){
+
+				oldName = rs.getString("StudentName");
+
+				oldAmount = rs.getDouble("Amount");
+
+			}
+
+			PreparedStatement ps =
+			con.prepareStatement(
+
+			"update feepayments set StudentID=?, StudentName=?, PaymentDate=?, Amount=?, Status=? where PaymentID=?"
+
+			);
+
+			ps.setInt(1,studentID);
+
+			ps.setString(2,newName);
+
+			ps.setString(3,paymentDate);
+
+			ps.setDouble(4,newAmount);
+
+			ps.setString(5,status);
+
+			ps.setInt(6,paymentID);
+
+			ps.executeUpdate();
+
+			out.println("<html>");
+
+			out.println("<head>");
+
+			out.println("<title>Updated</title>");
+
+			out.println("<style>");
+
+			out.println("body{");
+			out.println("margin:0;");
+			out.println("font-family:Arial;");
+			out.println("background:#102b72;");
+			out.println("display:flex;");
+			out.println("justify-content:center;");
+			out.println("align-items:center;");
+			out.println("height:100vh;");
+			out.println("}");
+
+			out.println(".box{");
+			out.println("background:#f2f2f2;");
+			out.println("padding:50px;");
+			out.println("width:500px;");
+			out.println("border-radius:20px;");
+			out.println("text-align:center;");
+			out.println("}");
+
+			out.println("h1{");
+			out.println("color:green;");
+			out.println("font-size:50px;");
+			out.println("}");
+
+			out.println("h2{");
+			out.println("margin:15px;");
+			out.println("}");
+
+			out.println("a{");
+			out.println("text-decoration:none;");
+			out.println("background:#2d56d3;");
+			out.println("color:white;");
+			out.println("padding:15px 30px;");
+			out.println("border-radius:10px;");
+			out.println("font-size:18px;");
+			out.println("}");
+
+			out.println("</style>");
+
+			out.println("</head>");
+
+			out.println("<body>");
+
+			out.println("<div class='box'>");
+
+			out.println("<h1>Updated Successfully</h1>");
+
+			out.println("<h2>Record ID : "
+			+ paymentID +
+			"</h2>");
+
+			out.println("<h2>Name Updated</h2>");
+
+			out.println("<h2>"
+			+ oldName +
+			" to "
+			+ newName +
+			"</h2>");
+
+			out.println("<h2>Amount Updated</h2>");
+
+			out.println("<h2>Rs."
+			+ oldAmount +
+			" to Rs."
+			+ newAmount +
+			"</h2>");
+
+			out.println("<br><br>");
+
+			out.println("<a href='UpdateListServlet'>Back</a>");
+
+			out.println("</div>");
+
+			out.println("</body>");
+
+			out.println("</html>");
+
+			con.close();
+
+		}
+
+		catch(Exception e){
+
+			out.println(e);
+
+		}
+
 	}
+
 }
