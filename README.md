@@ -3,7 +3,8 @@ CollegeFeeWebApp o/p:
 Home :
 https://github.com/AmnaAnsarBaji/CollegeFeeWebApp/blob/8fadd36bbbe7bfc99ea57046403757bf5c3d6028/CollegeFeePaymentSystem.png
 
-AddPayment :
+Addpayment :
+https://github.com/AmnaAnsarBaji/CollegeFeeWebApp/blob/7605eb716a822c4d6455dae9bdf8e4129b10e55e/Addpayment.png
 
 PaymentOptions :
 https://github.com/AmnaAnsarBaji/CollegeFeeWebApp/blob/8fadd36bbbe7bfc99ea57046403757bf5c3d6028/PaymentOptions.png
